@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import 'antd/dist/antd.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { SiteLayout } from "./modules/siteLayout/SiteLayout";
+
+import "antd/dist/antd.css";
+import UserProfile from "./pages/UserProfile";
+import Home from "./pages/Home";
+import { useCallback, useState } from "react";
+import Login from "./pages/Login";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const login = useCallback(() => {
+    setIsLoggedIn(true);
+  }, []);
+
+  if (!isLoggedIn) {
+    return <Login login={login} />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <SiteLayout>
+        <Switch>
+          <Route path="/user">
+            <UserProfile />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+          {/* <Route default component={Create} /> */}
+        </Switch>
+      </SiteLayout>
+    </Router>
   );
 }
 
