@@ -28,6 +28,7 @@ function App() {
           <Route path="/">
             <Home />
           </Route>
+          {/* TODO: make a 404 page not found page */}
           {/* <Route default component={Create} /> */}
         </Switch>
       </SiteLayout>
