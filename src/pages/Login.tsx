@@ -2,6 +2,8 @@ import { Button, Form, Input, Typography } from "antd";
 import { GithubOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useCallback, useState } from "react";
+import { LoginInput } from "../types";
+import { useForm } from "antd/lib/form/Form";
 
 const LoginPageWrapper = styled.div`
   width: 100%;
@@ -23,11 +25,12 @@ const StyledTitle = styled(Typography.Title)`
 `;
 
 interface LoginProps {
-  login: () => void;
+  login: (values: any) => void;
 }
 
 export default function Login({ login }: LoginProps): JSX.Element {
   const [createNewAccount, setCreateNewAccount] = useState(false);
+  const [form] = useForm<LoginInput>();
 
   const onGithubClick = useCallback(() => {}, []);
 
@@ -80,6 +83,7 @@ export default function Login({ login }: LoginProps): JSX.Element {
       <StyledTitle>yeet-online</StyledTitle>
       <StyledForm
         name="login"
+        form={form}
         onFinish={login}
         // onFinishFailed={onFinishFailed}
       >

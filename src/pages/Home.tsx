@@ -1,12 +1,17 @@
 import { Typography } from "antd";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { YeetCard } from "../modules/YeetCard";
-import { Yeet } from "../types";
+import { YeetCreator, YeetCreatorProps } from "../modules/YeetCreator";
+import { SERVER_URL, Yeet } from "../types";
 
-export default function Home(): JSX.Element {
+interface HomeProps {
+  token: string | null | undefined;
+}
+
+export default function Home({ token }: HomeProps): JSX.Element {
   const [feed, setFeed] = useState<Yeet[]>([]);
   const refreshData = useCallback(() => {
-    fetch("http://localhost:8080/explore-feed")
+    fetch(`${SERVER_URL}/explore-feed`)
       .then((resp) => resp.json())
       .then((data) => setFeed(data.results));
   }, []);
@@ -18,6 +23,7 @@ export default function Home(): JSX.Element {
   return (
     <>
       <Typography.Title level={2}>Explore</Typography.Title>
+      {token && <YeetCreator token={token} refreshData={refreshData} />}
       {feed.length < 1 ? (
         <Typography.Text>No yeets yet</Typography.Text>
       ) : (

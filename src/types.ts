@@ -1,4 +1,6 @@
 
+export const SERVER_URL = "http://localhost:8080";
+
 export type User =  {
     id: number;
     username: string;
@@ -12,4 +14,9 @@ export type Yeet =  {
     content: string;
     dateCreated: string;
     dateUpdate: string;
+}
+
+export type LoginInput =  {
+    username: string;
+    password: string;
 }
