@@ -10,6 +10,7 @@ import useToken from "./hooks/useToken";
 import { Modal } from "antd";
 import { LoginInput, SERVER_URL } from "./types";
 import useUser from "./hooks/useUser";
+import { YeetPost } from "./pages/YeetPost";
 
 function App() {
   const { token, setToken } = useToken();
@@ -51,6 +52,9 @@ function App() {
         handleLogoutClick={logout}
       >
         <Switch>
+          <Route path="/yeet">
+            <YeetPost currentUser={user} token={token} />
+          </Route>
           <Route path="/user">
             <UserProfile currentUser={user} token={token} />
           </Route>

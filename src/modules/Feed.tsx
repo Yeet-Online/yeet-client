@@ -1,9 +1,10 @@
 import { Alert, Typography } from "antd";
 import { ReactNode } from "react";
 import styled from "styled-components";
-import { YeetCard } from "../modules/YeetCard";
+import { YeetAndCommentCard } from "../modules/YeetAndCommentCard";
 import { YeetCreator } from "../modules/YeetCreator";
-import { User, Yeet } from "../types";
+import { Comment, User, Yeet } from "../types";
+import { CommentCreator } from "./CommentCreator";
 
 const YeetCreatorWrapper = styled.div`
   margin-bottom: 20px;
@@ -17,6 +18,8 @@ interface FeedProps {
   feed: Yeet[];
   showYeetCreator?: boolean;
   error?: string;
+  isCommentFeed?: boolean;
+  yeetId?: string;
 }
 
 export function Feed({
@@ -26,24 +29,43 @@ export function Feed({
   refreshData,
   feed,
   showYeetCreator,
+  isCommentFeed,
   error,
+  yeetId,
 }: FeedProps): JSX.Element {
   return (
     <>
-      <Typography.Title level={2}>{title}</Typography.Title>
+      <Typography.Title level={isCommentFeed ? 4 : 2}>{title}</Typography.Title>
       {showYeetCreator && token && user && (
         <YeetCreatorWrapper>
-          <YeetCreator token={token} refreshData={refreshData} />
+          {isCommentFeed && yeetId ? (
+            <CommentCreator
+              refreshData={refreshData}
+              token={token}
+              yeetId={yeetId}
+            />
+          ) : (
+            <YeetCreator token={token} refreshData={refreshData} />
+          )}
         </YeetCreatorWrapper>
       )}
       {error && (
         <Alert message="Error" description={error} type="error" showIcon />
       )}
       {feed.length < 1 ? (
-        <Typography.Text>No yeets yet</Typography.Text>
+        <Typography.Text>
+          No {isCommentFeed ? "comments" : "yeets"} yet
+        </Typography.Text>
       ) : (
-        feed.map((yeet: Yeet): ReactNode => {
-          return <YeetCard yeet={yeet} key={yeet.id} />;
+        feed.map((post: Yeet | Comment): ReactNode => {
+          return (
+            <YeetAndCommentCard
+              post={post}
+              key={post.id}
+              currentUser={user || undefined}
+              isComment={isCommentFeed}
+            />
+          );
         })
       )}
     </>

@@ -57,7 +57,7 @@ export default function Login({ login }: LoginProps): JSX.Element {
 
   return (
     <LoginPageWrapper>
-      <StyledTitle>yeet-online</StyledTitle>
+      <StyledTitle>{createNewAccount ? "Create Account" : "Login"}</StyledTitle>
       <StyledForm
         name={createNewAccount ? "createNewAccount" : "login"}
         form={form}

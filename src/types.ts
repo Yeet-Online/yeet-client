@@ -5,7 +5,7 @@ export type User =  {
     id: number;
     username: string;
     dateCreated: string;
-    dateUpdate: string;
+    dateUpdated: string;
 }
 
 export type Yeet =  {
@@ -13,7 +13,16 @@ export type Yeet =  {
     user: User;
     content: string;
     dateCreated: string;
-    dateUpdate: string;
+    dateUpdated: string;
+}
+
+export type Comment =  {
+    id: number;
+    user: User;
+    yeetId: string;
+    content: string;
+    dateCreated: string;
+    dateUpdated: string;
 }
 
 export type LoginInput =  {
