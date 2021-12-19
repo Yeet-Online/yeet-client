@@ -42,6 +42,13 @@ export function Sidebar({
     openLoginModal(true);
   }, [openLoginModal]);
 
+  const handleUserOnClick = useCallback(() => {
+    history.push({
+      pathname: "/user/",
+      search: user?.username && `?user=${user.username}`,
+    });
+  }, [history, user?.username]);
+
   return (
     <StyledSider theme="light">
       <Logo level={1}>yeet-online</Logo>
@@ -55,8 +62,8 @@ export function Sidebar({
         </Menu.Item>
         {user ? (
           <>
-            <Menu.Item key="/user" onClick={() => history.push("/user")}>
-              <Link to="/user">User Profile</Link>
+            <Menu.Item key="/user" onClick={handleUserOnClick}>
+              <Link to="/user">My Profile</Link>
             </Menu.Item>
             <LoginButton onClick={handleLogoutClick}>Logout</LoginButton>
           </>

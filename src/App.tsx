@@ -52,10 +52,10 @@ function App() {
       >
         <Switch>
           <Route path="/user">
-            <UserProfile user={user} token={token} />
+            <UserProfile currentUser={user} token={token} />
           </Route>
           <Route path="/">
-            <Home token={token} />
+            <Home user={user} token={token} />
           </Route>
           {/* TODO: make a 404 page not found page */}
           {/* <Route default component={Create} /> */}

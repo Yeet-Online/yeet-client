@@ -1,4 +1,6 @@
 import { Typography } from "antd";
+import { useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { Yeet } from "../types";
 
@@ -15,10 +17,21 @@ interface YeetProps {
 }
 
 export function YeetCard({ yeet }: YeetProps): JSX.Element {
+  const history = useHistory();
+
+  const handleOnClick = useCallback(() => {
+    history.push({
+      pathname: "/user/",
+      search: `?user=${yeet.user.username}`,
+    });
+  }, [history, yeet.user.username]);
+
   return (
     <Container>
       <CardHeader>
-        <Typography.Text strong>@{yeet.user.username}</Typography.Text>
+        <Typography.Link onClick={handleOnClick} strong>
+          @{yeet.user.username}
+        </Typography.Link>
       </CardHeader>
       <Typography.Text>{yeet.content}</Typography.Text>
     </Container>

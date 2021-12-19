@@ -1,7 +1,16 @@
 import { Button, Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useCallback } from "react";
+import styled from "styled-components";
 import { SERVER_URL } from "../types";
+
+const StyledForm = styled(Form)`
+  text-align: right;
+`;
+
+const StyledInput = styled(Input)`
+  font-size: 20px;
+`;
 
 export interface YeetCreatorProps {
   token: string | null | undefined;
@@ -20,7 +29,6 @@ export function YeetCreator({
       const formData = new FormData();
       headers.append("Authorization", `${token}`);
       formData.append("content", values.content);
-      console.log(values);
 
       fetch(`${SERVER_URL}/post-yeet`, {
         method: "POST",
@@ -30,21 +38,29 @@ export function YeetCreator({
         .then((resp) => resp.json())
         .then(() => {
           refreshData();
+          form.resetFields();
         });
     },
-    [refreshData, token]
+    [form, refreshData, token]
   );
 
   return (
-    <Form name="yeet" form={form} onFinish={yeet}>
+    <StyledForm name="yeet" form={form} onFinish={yeet}>
       <Form.Item
         name="content"
-        rules={[{ required: true, message: "Add some text first!" }]}
-        noStyle
+        rules={[
+          { required: true, message: "Add some text first!" },
+          {
+            max: 250,
+            message: "Yeets can have a max of 250 characters",
+          },
+        ]}
       >
-        <Input placeholder="What's on your mind?" />
+        <StyledInput placeholder="What's on your mind?" bordered={false} />
       </Form.Item>
-      <Button htmlType="submit">YEET</Button>
-    </Form>
+      <Button htmlType="submit" type="primary">
+        YEET
+      </Button>
+    </StyledForm>
   );
 }
