@@ -62,10 +62,11 @@ export default function UserProfile({
       <Feed
         token={token}
         error={error}
+        currentUser={currentUser}
         user={user}
         feed={feed}
         refreshData={refreshData}
-        title={`@${user?.username}'s Yeet`}
+        title={`@${user?.username}'s Profile`}
         showYeetCreator={currentUser?.id === user?.id}
       />
     </>

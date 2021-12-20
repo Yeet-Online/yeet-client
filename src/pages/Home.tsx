@@ -23,7 +23,7 @@ export default function Home({ token, user }: HomeProps): JSX.Element {
     <>
       <Feed
         token={token}
-        user={user}
+        currentUser={user}
         feed={feed}
         refreshData={refreshData}
         title="Explore"

@@ -28,52 +28,44 @@ export function YeetPost({ currentUser, token }: YeetPostProps): JSX.Element {
   const yeetId = new URLSearchParams(search).get("yeet") || undefined;
 
   const getComments = useCallback(() => {
-    if (token) {
-      fetch(`${SERVER_URL}/get-comments-by-yeet-id?id=${yeetId}`, {
-        method: "GET",
+    fetch(`${SERVER_URL}/get-comments-by-yeet-id?id=${yeetId}`, {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setComments(data.results);
+        if (user) {
+          setError(undefined);
+        }
       })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setComments(data.results);
-          if (user) {
-            setError(undefined);
-          }
-        })
-        .catch((err) => {
-          setError(err.message);
-        });
-    } else {
-      setError("Cannot find yeet");
-    }
-  }, [token, user, yeetId]);
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, [user, yeetId]);
 
   const refreshData = useCallback(() => {
-    if (token) {
-      fetch(`${SERVER_URL}/get-yeet?id=${yeetId}`, {
-        method: "GET",
+    fetch(`${SERVER_URL}/get-yeet?id=${yeetId}`, {
+      method: "GET",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setYeet(data);
+        getComments();
+        if (user) {
+          setError(undefined);
+        }
       })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setYeet(data);
-          getComments();
-          if (user) {
-            setError(undefined);
-          }
-        })
-        .catch((err) => {
-          setError(err.message);
-        });
-    } else {
-      setError("Cannot find yeet");
-    }
-  }, [getComments, token, user, yeetId]);
+      .catch((err) => {
+        setError(err.message);
+      });
+  }, [getComments, user, yeetId]);
 
   const handleUsernameOnClick = useCallback(() => {
     history.push({
       pathname: "/user/",
       search: `?user=${yeet?.user.username}`,
     });
-  }, [yeet?.user.username]);
+  }, [history, yeet?.user.username]);
 
   useEffect(() => {
     refreshData();
@@ -91,6 +83,7 @@ export function YeetPost({ currentUser, token }: YeetPostProps): JSX.Element {
       <Feed
         feed={comments}
         token={token}
+        currentUser={currentUser}
         refreshData={refreshData}
         showYeetCreator
         title="Comments"

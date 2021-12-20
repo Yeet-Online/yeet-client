@@ -11,7 +11,8 @@ const YeetCreatorWrapper = styled.div`
 `;
 
 interface FeedProps {
-  user: User | null | undefined;
+  user?: User | null | undefined;
+  currentUser: User | null | undefined;
   token: string | null | undefined;
   title: string;
   refreshData: () => void;
@@ -24,6 +25,7 @@ interface FeedProps {
 
 export function Feed({
   user,
+  currentUser,
   token,
   title,
   refreshData,
@@ -62,8 +64,10 @@ export function Feed({
             <YeetAndCommentCard
               post={post}
               key={post.id}
-              currentUser={user || undefined}
+              currentUser={currentUser || undefined}
               isComment={isCommentFeed}
+              token={token}
+              refreshData={refreshData}
             />
           );
         })
