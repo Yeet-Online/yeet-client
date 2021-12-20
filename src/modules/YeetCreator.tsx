@@ -1,6 +1,6 @@
-import { Button, Form, Input } from "antd";
+import { Alert, Button, Form, Input } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { SERVER_URL } from "../types";
 
@@ -22,6 +22,7 @@ export function YeetCreator({
   refreshData,
 }: YeetCreatorProps): JSX.Element {
   const [form] = useForm();
+  const [error, setError] = useState<string>();
 
   const yeet = useCallback(
     (values: any) => {
@@ -39,28 +40,37 @@ export function YeetCreator({
         .then(() => {
           refreshData();
           form.resetFields();
+        })
+        .catch((err) => {
+          setError(err.message);
+          console.error(err);
         });
     },
     [form, refreshData, token]
   );
 
   return (
-    <StyledForm name="yeet" form={form} onFinish={yeet}>
-      <Form.Item
-        name="content"
-        rules={[
-          { required: true, message: "Add some text first!" },
-          {
-            max: 250,
-            message: "Yeets can have a max of 250 characters",
-          },
-        ]}
-      >
-        <StyledInput placeholder="What's on your mind?" bordered={false} />
-      </Form.Item>
-      <Button htmlType="submit" type="primary">
-        YEET
-      </Button>
-    </StyledForm>
+    <>
+      {error && (
+        <Alert message="Error" description={error} type="error" showIcon />
+      )}
+      <StyledForm name="yeet" form={form} onFinish={yeet}>
+        <Form.Item
+          name="content"
+          rules={[
+            { required: true, message: "Add some text first!" },
+            {
+              max: 250,
+              message: "Yeets can have a max of 250 characters",
+            },
+          ]}
+        >
+          <StyledInput placeholder="What's on your mind?" bordered={false} />
+        </Form.Item>
+        <Button htmlType="submit" type="primary">
+          YEET
+        </Button>
+      </StyledForm>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export function Feed({
   return (
     <>
       {title}
-      {showYeetCreator && token && user && (
+      {showYeetCreator && token && currentUser && (
         <YeetCreatorWrapper>
           {isCommentFeed && yeetId ? (
             <CommentCreator

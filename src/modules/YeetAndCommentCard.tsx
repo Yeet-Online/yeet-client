@@ -1,5 +1,5 @@
 import { CommentOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Typography } from "antd";
+import { Alert, Button, Form, Input, Typography } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -36,6 +36,7 @@ export function YeetAndCommentCard({
   isCard,
 }: YeetAndCommentProps): JSX.Element {
   const [isEdit, setIsEdit] = useState(false);
+  const [error, setError] = useState<string>();
   const [form] = useForm();
   const history = useHistory();
 
@@ -78,6 +79,11 @@ export function YeetAndCommentCard({
           }
           form.resetFields();
           setIsEdit(false);
+          setError(undefined);
+        })
+        .catch((err) => {
+          setError(err.message);
+          console.error(err);
         });
     },
     [form, isComment, post.id, refreshData, token]
@@ -89,17 +95,27 @@ export function YeetAndCommentCard({
     headers.append("Authorization", `${token}`);
     formData.append("id", `${post.id}`);
 
+    console.log(token);
+
     fetch(`${SERVER_URL}/delete-${isComment ? "comment" : "yeet"}`, {
       method: "DELETE",
       body: formData,
       headers,
-    })
-      .then((resp) => resp.json())
-      .then(() => {
-        refreshData();
-        console.log("poop");
+    }).then((resp) => {
+      refreshData();
+      setError(undefined);
+      history.push({
+        pathname: "/",
       });
-  }, [isComment, post.id, refreshData, token]);
+      return resp
+        .json()
+        .then(() => {})
+        .catch((err) => {
+          setError(err.message);
+          console.error(err);
+        });
+    });
+  }, [history, isComment, post.id, refreshData, token]);
 
   return (
     <Container $isCard={isCard}>
@@ -123,6 +139,9 @@ export function YeetAndCommentCard({
         post={post}
         isCard={isCard}
       />
+      {error && (
+        <Alert message="Error" description={error} type="error" showIcon />
+      )}
       {!isEdit ? (
         <Typography.Text>{post.content}</Typography.Text>
       ) : (

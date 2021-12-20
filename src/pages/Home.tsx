@@ -11,6 +11,7 @@ interface HomeProps {
 
 export default function Home({ token, user }: HomeProps): JSX.Element {
   const [feed, setFeed] = useState<Yeet[]>([]);
+  const [error, setError] = useState<string>();
   const [pageNumber, setPageNumber] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -19,11 +20,15 @@ export default function Home({ token, user }: HomeProps): JSX.Element {
       .then((resp) => resp.json())
       .then((data) => {
         const newPosts: Yeet[] = data.results;
-        console.log(pageNumber);
         setFeed(feed.concat(newPosts));
+        setError(undefined);
         if (newPosts.length < 1) {
           setHasMore(false);
         }
+      })
+      .catch((err) => {
+        setError(err.message);
+        console.error(err);
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,6 +48,7 @@ export default function Home({ token, user }: HomeProps): JSX.Element {
         token={token}
         currentUser={user}
         feed={feed}
+        error={error}
         refreshData={refreshData}
         title={<Typography.Title level={2}>Explore</Typography.Title>}
         showYeetCreator

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Typography } from "antd";
+import { Alert, Button, Form, Input, Typography } from "antd";
 import { GithubOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useCallback, useState } from "react";
@@ -26,10 +26,15 @@ const StyledTitle = styled(Typography.Title)`
 
 interface LoginProps {
   login: (values: any) => void;
+  loginErrorMessage?: string;
 }
 
-export default function Login({ login }: LoginProps): JSX.Element {
+export default function Login({
+  login,
+  loginErrorMessage,
+}: LoginProps): JSX.Element {
   const [createNewAccount, setCreateNewAccount] = useState(false);
+  const [error, setError] = useState<string | undefined>(loginErrorMessage);
   const [form] = useForm<LoginInput>();
 
   const onCreateNewAccountClick = useCallback(() => {
@@ -49,15 +54,21 @@ export default function Login({ login }: LoginProps): JSX.Element {
     fetch(`${SERVER_URL}/register`, { method: "POST", body: formData })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
-
         setCreateNewAccount(false);
+        setError(undefined);
+      })
+      .catch((err) => {
+        setError(err.message);
+        console.error(err);
       });
   }, []);
 
   return (
     <LoginPageWrapper>
       <StyledTitle>{createNewAccount ? "Create Account" : "Login"}</StyledTitle>
+      {error && (
+        <Alert message="Error" description={error} type="error" showIcon />
+      )}
       <StyledForm
         name={createNewAccount ? "createNewAccount" : "login"}
         form={form}

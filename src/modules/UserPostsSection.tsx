@@ -32,7 +32,6 @@ export function UserPostsSection({
       .then((data) => {
         const newPosts: Yeet[] = data.results;
         setFeed(feed.concat(newPosts));
-        console.log(newPosts);
         if (newPosts.length < 1) {
           setHasMore(false);
         } else {
@@ -43,6 +42,7 @@ export function UserPostsSection({
       })
       .catch((err) => {
         setError(err.message);
+        console.error(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, setError, username]);

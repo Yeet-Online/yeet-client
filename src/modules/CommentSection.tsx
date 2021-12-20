@@ -33,7 +33,6 @@ export function CommentSection({
       .then((resp) => resp.json())
       .then((data) => {
         const newPosts: Comment[] = data.results;
-        console.log(pageNumber);
         setComments(comments.concat(newPosts));
         if (newPosts.length < 1) {
           setHasMore(false);
@@ -43,6 +42,7 @@ export function CommentSection({
       })
       .catch((err) => {
         setError(err.message);
+        console.error(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, setError, yeetId]);

@@ -15,6 +15,9 @@ import { YeetPost } from "./pages/YeetPost";
 function App() {
   const { token, setToken } = useToken();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginErrorMessage, setLoginErrorMessage] = useState<
+    string | undefined
+  >();
   const { user, setUser } = useUser();
 
   const login = useCallback(
@@ -26,10 +29,14 @@ function App() {
       fetch(`${SERVER_URL}/login`, { method: "POST", body: formData })
         .then((resp) => resp.json())
         .then((data) => {
-          // console.log(data);
           setToken(data.accessToken);
           setUser(data.user);
           setIsLoginModalOpen(false);
+          setLoginErrorMessage(undefined);
+        })
+        .catch((err) => {
+          setLoginErrorMessage(err.message);
+          console.error(err);
         });
     },
     [setToken, setUser]
@@ -70,7 +77,7 @@ function App() {
             visible={isLoginModalOpen}
             footer={null}
           >
-            <Login login={login} />
+            <Login login={login} loginErrorMessage={loginErrorMessage} />
           </Modal>
         }
       </SiteLayout>
