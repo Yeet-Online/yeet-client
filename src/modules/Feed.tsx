@@ -68,6 +68,7 @@ export function Feed({
               isComment={isCommentFeed}
               token={token}
               refreshData={refreshData}
+              isCard
             />
           );
         })

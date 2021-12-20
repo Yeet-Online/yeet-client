@@ -1,45 +1,30 @@
-import {
-  CommentOutlined,
-  DeleteOutlined,
-  EllipsisOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Dropdown,
-  Form,
-  Input,
-  Menu,
-  Popconfirm,
-  Typography,
-} from "antd";
+import { CommentOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Typography } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { Comment, SERVER_URL, User, Yeet } from "../types";
+import { Comment, SERVER_URL } from "../types";
+import { PostHeader, PostHeaderProps } from "./PostHeader";
 
-const Container = styled.div`
-  border: 1px solid #f0f0f0;
-  padding: 20px;
+const Container = styled.div<{ $isCard?: boolean }>`
+  ${(props) => props.$isCard && "border: 1px solid #f0f0f0; padding: 20px;"}
   width: 100%;
 `;
 
-const CardHeader = styled.div`
-  display: flex;
-  flex: row;
-  justify-content: space-between;
+const StyledUsername = styled(Typography.Title)`
+  cursor: pointer;
 `;
 
 const CardFooter = styled.div`
   text-align: right;
 `;
 
-interface YeetAndCommentProps {
-  post: Yeet | Comment;
-  currentUser?: User;
-  isComment?: boolean;
+interface YeetAndCommentProps
+  extends Pick<PostHeaderProps, "currentUser" | "isComment" | "post"> {
   token: string | null | undefined;
   refreshData: () => void;
+  isCard?: boolean;
 }
 
 export function YeetAndCommentCard({
@@ -48,6 +33,7 @@ export function YeetAndCommentCard({
   isComment,
   token,
   refreshData,
+  isCard,
 }: YeetAndCommentProps): JSX.Element {
   const [isEdit, setIsEdit] = useState(false);
   const [form] = useForm();
@@ -97,66 +83,46 @@ export function YeetAndCommentCard({
     [form, isComment, post.id, refreshData, token]
   );
 
-  const handleDeleteClick = useCallback(
-    (values: any) => {
-      const headers = new Headers();
-      const formData = new FormData();
-      headers.append("Authorization", `${token}`);
-      formData.append("id", `${post.id}`);
+  const handleDeleteClick = useCallback(() => {
+    const headers = new Headers();
+    const formData = new FormData();
+    headers.append("Authorization", `${token}`);
+    formData.append("id", `${post.id}`);
 
-      fetch(`${SERVER_URL}/delete-${isComment ? "comment" : "yeet"}`, {
-        method: "DELETE",
-        body: formData,
-        headers,
-      })
-        .then((resp) => resp.json())
-        .then(() => {
-          refreshData();
-          console.log("poop");
-        });
-    },
-    [isComment, post.id, refreshData, token]
-  );
+    fetch(`${SERVER_URL}/delete-${isComment ? "comment" : "yeet"}`, {
+      method: "DELETE",
+      body: formData,
+      headers,
+    })
+      .then((resp) => resp.json())
+      .then(() => {
+        refreshData();
+        console.log("poop");
+      });
+  }, [isComment, post.id, refreshData, token]);
 
   return (
-    <Container>
-      <CardHeader>
-        <Typography.Link onClick={handleUserOnClick} strong>
-          @{post.user.username}
-        </Typography.Link>
-        {(!isComment || (currentUser && currentUser.id === post?.user.id)) && (
-          <Dropdown
-            overlay={
-              <Menu>
-                {!isComment && (
-                  <Menu.Item onClick={handlePostOnClick}>View</Menu.Item>
-                )}
-                {currentUser && currentUser.id === post?.user.id && (
-                  <>
-                    <Menu.Item onClick={handleEditClick}>Edit</Menu.Item>
-                    <Popconfirm
-                      title={`Are you sure you want to delete this ${
-                        isComment ? "comment" : "yeet"
-                      }？`}
-                      okText="Delete"
-                      cancelText="Cancel"
-                      onConfirm={handleDeleteClick}
-                      placement="topRight"
-                      okType="danger"
-                      icon={<DeleteOutlined />}
-                    >
-                      <Menu.Item danger>Delete</Menu.Item>
-                    </Popconfirm>
-                  </>
-                )}
-              </Menu>
-            }
-            placement="bottomRight"
-          >
-            <Button icon={<EllipsisOutlined />} shape="round" type="text" />
-          </Dropdown>
-        )}
-      </CardHeader>
+    <Container $isCard={isCard}>
+      <PostHeader
+        title={
+          isCard ? (
+            <Typography.Link onClick={handleUserOnClick} strong>
+              @{post.user.username}
+            </Typography.Link>
+          ) : (
+            <StyledUsername level={3} onClick={handleUserOnClick}>
+              @{post.user.username}
+            </StyledUsername>
+          )
+        }
+        handleDeleteClick={handleDeleteClick}
+        handleEditClick={handleEditClick}
+        handlePostOnClick={handlePostOnClick}
+        isComment={isComment}
+        currentUser={currentUser}
+        post={post}
+        isCard={isCard}
+      />
       {!isEdit ? (
         <Typography.Text>{post.content}</Typography.Text>
       ) : (
@@ -180,12 +146,14 @@ export function YeetAndCommentCard({
           >
             <Input placeholder="Add some content..." bordered={false} />
           </Form.Item>
-          <Button htmlType="submit" type="primary">
-            YEET
-          </Button>
+          <CardFooter>
+            <Button htmlType="submit" type="primary">
+              {isEdit ? "Update" : "YEET"}
+            </Button>
+          </CardFooter>
         </Form>
       )}
-      {!isComment && (
+      {!isComment && isCard && !isEdit && (
         <CardFooter>
           <Button
             icon={<CommentOutlined />}

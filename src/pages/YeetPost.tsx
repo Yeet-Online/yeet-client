@@ -1,15 +1,9 @@
 import { Alert, Divider, Typography } from "antd";
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import styled from "styled-components";
-import { CommentCreator } from "../modules/CommentCreator";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Feed } from "../modules/Feed";
 import { YeetAndCommentCard } from "../modules/YeetAndCommentCard";
 import { Comment, SERVER_URL, User, Yeet } from "../types";
-
-const StyledUsername = styled(Typography.Title)`
-  cursor: pointer;
-`;
 
 interface YeetPostProps {
   currentUser?: User;
@@ -21,8 +15,6 @@ export function YeetPost({ currentUser, token }: YeetPostProps): JSX.Element {
   const [comments, setComments] = useState<Comment[] | []>([]);
   const [user, setUser] = useState<User>();
   const [error, setError] = useState<string>();
-
-  const history = useHistory();
 
   const search = useLocation().search;
   const yeetId = new URLSearchParams(search).get("yeet") || undefined;
@@ -51,6 +43,7 @@ export function YeetPost({ currentUser, token }: YeetPostProps): JSX.Element {
       .then((data) => {
         setYeet(data);
         getComments();
+        setUser(data.user);
         if (user) {
           setError(undefined);
         }
@@ -60,25 +53,22 @@ export function YeetPost({ currentUser, token }: YeetPostProps): JSX.Element {
       });
   }, [getComments, user, yeetId]);
 
-  const handleUsernameOnClick = useCallback(() => {
-    history.push({
-      pathname: "/user/",
-      search: `?user=${yeet?.user.username}`,
-    });
-  }, [history, yeet?.user.username]);
-
   useEffect(() => {
     refreshData();
   }, [refreshData]);
   return (
     <>
-      <StyledUsername level={3} onClick={handleUsernameOnClick}>
-        @{yeet?.user.username}
-      </StyledUsername>
       {error && (
         <Alert message="Error" description={error} type="error" showIcon />
       )}
-      <Typography.Text>{yeet?.content}</Typography.Text>
+      {yeet && (
+        <YeetAndCommentCard
+          post={yeet}
+          refreshData={refreshData}
+          token={token}
+          currentUser={currentUser}
+        />
+      )}
       <Divider />
       <Feed
         feed={comments}
