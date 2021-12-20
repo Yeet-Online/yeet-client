@@ -10,11 +10,11 @@ const YeetCreatorWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-interface FeedProps {
+export interface FeedProps {
   user?: User | null | undefined;
   currentUser: User | null | undefined;
   token: string | null | undefined;
-  title: string;
+  title: ReactNode;
   refreshData: () => void;
   feed: Yeet[];
   showYeetCreator?: boolean;
@@ -37,7 +37,7 @@ export function Feed({
 }: FeedProps): JSX.Element {
   return (
     <>
-      <Typography.Title level={isCommentFeed ? 4 : 2}>{title}</Typography.Title>
+      {title}
       {showYeetCreator && token && user && (
         <YeetCreatorWrapper>
           {isCommentFeed && yeetId ? (
