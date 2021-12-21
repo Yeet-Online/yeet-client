@@ -1,4 +1,40 @@
-# Getting Started with Create React App
+# Getting Started
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). It also uses [Ant Design](https://ant.design/docs/react/introduce) for all the UI components.
+
+Here's a quick guide to get the app running locally
+
+## Step 1: Cloning the Repositories
+
+You're going to want to clone this repository (this is the client/front end for yeet-online). I also suggest cloning [yeet-platform](https://github.com/Yeet-Online/yeet-platform) is the same directory in which you cloned this repo (you'll see why later).
+
+## Step 2: Downloading dependencies
+
+You will need `yarn` to run the client ([here's a quick guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-the-yarn-package-manager-for-node-js) to getting that setup). You'll also need `node.js` ([another guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)).
+
+## Step 3: Running everything
+
+Now, if you want to be a cool cat, _and_ you cloned both the client and platform repos at the same directory level, you can just run
+
+```
+yarn run-everything
+```
+
+And the app will start up with the front and and backend working. The first time you run it it might take some time because the platform dependicies need to be downloaded but it should start up fairly quickly the following times.
+
+If you only want to run the client, use this command:
+
+```
+yarn start
+```
+
+## Get yeeting!
+
+That's all it takes. Super simple, just how it should be.
+
+Just in case you wanted to know more I left the default react READ.ME below.
+
+# Getting Started with Create React App (Generic Read.me)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
