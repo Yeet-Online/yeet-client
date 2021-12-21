@@ -21,7 +21,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "run-everything": "concurrently \"yarn run-server\" \"yarn start\"",
+    "run-server": "cd ../yeet-platform && ./gradlew bootRun"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +47,7 @@
     "@ant-design/icons": "^4.7.0",
     "@types/react-router-dom": "^5.3.2",
     "@types/styled-components": "^5.1.18",
+    "concurrently": "^6.5.1",
     "react-router-dom": "^5.3.0",
     "styled-components": "^5.3.3"
   }

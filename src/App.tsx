@@ -66,7 +66,20 @@ function App() {
             <UserProfile currentUser={user} token={token} />
           </Route>
           <Route path="/">
-            <Home user={user} token={token} />
+            <Home
+              user={user}
+              token={token}
+              setToken={setToken}
+              setUser={setUser}
+            />
+          </Route>
+          <Route path="/github-login">
+            <Home
+              user={user}
+              token={token}
+              setToken={setToken}
+              setUser={setUser}
+            />
           </Route>
           {/* TODO: make a 404 page not found page */}
           {/* <Route default component={Create} /> */}

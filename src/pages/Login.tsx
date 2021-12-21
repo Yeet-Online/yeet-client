@@ -63,6 +63,14 @@ export default function Login({
       });
   }, []);
 
+  const github = useCallback(() => {
+    window.location.href =
+      "https://github.com/login/oauth/authorize" +
+      "?client_id=da8e21d4f1dca53d1fa4" +
+      "&redirect_uri=http://localhost:3000/github-login" +
+      "&allow_signup=true";
+  }, []);
+
   return (
     <LoginPageWrapper>
       <StyledTitle>{createNewAccount ? "Create Account" : "Login"}</StyledTitle>
@@ -146,6 +154,11 @@ export default function Login({
             <Form.Item>
               <StyledButton type="primary" htmlType="submit">
                 Login
+              </StyledButton>
+            </Form.Item>
+            <Form.Item>
+              <StyledButton icon={<GithubOutlined />} onClick={github}>
+                Sign in with GitHub
               </StyledButton>
             </Form.Item>
             <Form.Item>
